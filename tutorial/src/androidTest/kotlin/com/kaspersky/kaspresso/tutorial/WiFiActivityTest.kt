@@ -34,9 +34,6 @@ class WiFiActivityTest : TestCase() {
                     }
                 }
             }
-            step("Установка портретной ориентации") {
-                device.exploit.setOrientation(Exploit.DeviceOrientation.Portrait)
-            }
             WifiScreen {
                     step("Проверка начального состояния экрана") {
                         wifiStatus.hasEmptyText()
@@ -68,6 +65,7 @@ class WiFiActivityTest : TestCase() {
                 step("Включение WiFi и нажатие кнопки проверки статуса") {
                     checkWifiButton {
                         device.network.toggleWiFi(true)
+                        TimeUnit.SECONDS.sleep(1)
                         click()
                     }
                 }
@@ -76,12 +74,6 @@ class WiFiActivityTest : TestCase() {
                         isVisible()
                         hasText(R.string.enabled_status)
                     }
-                }
-                step("") {
-
-                }
-                step("") {
-
                 }
 
             }
