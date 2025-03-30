@@ -1,6 +1,7 @@
 package com.kaspersky.kaspresso.tutorial
 
 import androidx.test.ext.junit.rules.activityScenarioRule
+import com.kaspersky.kaspresso.device.exploit.Exploit
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.kaspersky.kaspresso.tutorial.screen.MainScreen
 import com.kaspersky.kaspresso.tutorial.screen.WifiScreen
@@ -24,11 +25,22 @@ class WiFiActivityTest : TestCase() {
                 click()
             }
         }
+
         WifiScreen {
+            device.exploit.setOrientation(Exploit.DeviceOrientation.Portrait)
+
+            wifiStatus.hasEmptyText()
+            checkWifiButton.isVisible()
+
             checkWifiButton {
                 device.network.toggleWiFi(false)
                 click()
             }
+            wifiStatus {
+                isVisible()
+                hasText(R.string.disabled_status)
+            }
+            device.exploit.setOrientation(Exploit.DeviceOrientation.Landscape)
             wifiStatus {
                 isVisible()
                 hasText(R.string.disabled_status)
@@ -40,7 +52,13 @@ class WiFiActivityTest : TestCase() {
             }
             wifiStatus {
                 isVisible()
-                hasText(R.string.disabled_status)
+                hasText(R.string.enabled_status)
+                TimeUnit.SECONDS.sleep(3)
+            }
+            device.exploit.setOrientation(Exploit.DeviceOrientation.Portrait)
+            wifiStatus {
+                isVisible()
+                hasText(R.string.enabled_status)
             }
         }
     }
