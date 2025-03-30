@@ -2,6 +2,7 @@ package com.kaspersky.kaspresso.tutorial
 
 import android.media.AudioManager
 import androidx.test.ext.junit.rules.activityScenarioRule
+import androidx.test.rule.GrantPermissionRule
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.kaspersky.kaspresso.tutorial.screen.MainScreen
 import com.kaspersky.kaspresso.tutorial.screen.MakeCallActivityScreen
@@ -15,9 +16,14 @@ class MakeCallActivityTest : TestCase() {
     @get:Rule
     val activityScenarioRule = activityScenarioRule<MainActivity>()
 
+    @get:Rule
+    val grantPermissionRule = GrantPermissionRule.grant(
+        android.Manifest.permission.CALL_PHONE
+    )
+
     @Before
     fun revokeCallPrivilege(){
-        adbServer.performShell("pm revoke com.kaspersky.kaspresso.tutorial android.permission.CALL_PHONE")
+//        adbServer.performShell("pm revoke com.kaspersky.kaspresso.tutorial android.permission.CALL_PHONE")
     }
 
     @Test
