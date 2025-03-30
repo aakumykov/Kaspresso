@@ -1,7 +1,8 @@
-package com.kaspersky.kaspresso.tutorial
+package com.kaspersky.kaspresso.tutorial.scenario
 
 import com.kaspersky.kaspresso.testcases.api.scenario.Scenario
 import com.kaspersky.kaspresso.testcases.core.testcontext.TestContext
+import com.kaspersky.kaspresso.tutorial.R
 import com.kaspersky.kaspresso.tutorial.screen.LoginScreen
 import com.kaspersky.kaspresso.tutorial.screen.MainScreen
 

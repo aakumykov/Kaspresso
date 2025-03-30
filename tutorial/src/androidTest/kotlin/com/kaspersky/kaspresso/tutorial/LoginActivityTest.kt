@@ -3,8 +3,7 @@ package com.kaspersky.kaspresso.tutorial
 import androidx.test.ext.junit.rules.activityScenarioRule
 import com.kaspersky.kaspresso.tutorial.afterlogin.AfterLoginActivity
 import com.kaspersky.kaspresso.tutorial.login.LoginActivity
-import com.kaspersky.kaspresso.tutorial.screen.LoginScreen
-import com.kaspersky.kaspresso.tutorial.screen.MainScreen
+import com.kaspersky.kaspresso.tutorial.scenario.LoginScenario
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
