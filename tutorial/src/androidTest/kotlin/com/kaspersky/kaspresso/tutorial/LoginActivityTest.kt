@@ -5,53 +5,28 @@ import com.kaspersky.kaspresso.tutorial.afterlogin.AfterLoginActivity
 import com.kaspersky.kaspresso.tutorial.login.LoginActivity
 import com.kaspersky.kaspresso.tutorial.screen.LoginScreen
 import com.kaspersky.kaspresso.tutorial.screen.MainScreen
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
+import java.util.concurrent.TimeUnit
 
 class LoginActivityTest : com.kaspersky.kaspresso.testcases.api.testcase.TestCase() {
 
     @get:Rule
     val activityRule = activityScenarioRule<MainActivity>()
 
+    @After
+    fun delay() {
+        TimeUnit.SECONDS.sleep(1)
+    }
+
     @Test
     fun successLoginTest() {
         run {
-            val username = "user"
-            val password = "password"
-
-            step("Open login screen") {
-                MainScreen {
-                    loginActivityButton {
-                        isVisible()
-                        isClickable()
-                        click()
-                    }
-                }
-            }
-            step("Проверка видимости полей") {
-                LoginScreen {
-                    inputUsername {
-                        isVisible()
-                        hasHint(R.string.login_activity_hint_username)
-                        hasEmptyText()
-                    }
-                    inputPassword {
-                        isVisible()
-                        hasHint(R.string.login_activity_hint_password)
-                        hasEmptyText()
-                    }
-                    loginButton {
-                        isVisible()
-                        isClickable()
-                    }
-                }
-            }
-            step("Попытка входа") {
-                LoginScreen {
-                    inputUsername.replaceText(username)
-                    inputPassword.replaceText(password)
-                    loginButton.click()
-                }
+            step("Попытка входа с корректными именем и паролем") {
+                scenario(
+                    LoginScenario("username", "password")
+                )
             }
             step("Проверка, что экран изменился на 'Авторизован'") {
                 device.activities.isCurrent(AfterLoginActivity::class.java)
@@ -62,40 +37,10 @@ class LoginActivityTest : com.kaspersky.kaspresso.testcases.api.testcase.TestCas
     @Test
     fun loginUnsuccessfulIfUsernameIncorrect() {
         run {
-            val username = "12"
-            val password = "123456"
-
-            step("Open login screen") {
-                MainScreen {
-                    loginActivityButton {
-                        isVisible()
-                        isClickable()
-                        click()
-                    }
-                }
-            }
-            step("Check elements visibility") {
-                LoginScreen {
-                    inputUsername {
-                        isVisible()
-                        hasHint(R.string.login_activity_hint_username)
-                    }
-                    inputPassword {
-                        isVisible()
-                        hasHint(R.string.login_activity_hint_password)
-                    }
-                    loginButton {
-                        isVisible()
-                        isClickable()
-                    }
-                }
-            }
-            step("Try to login") {
-                LoginScreen {
-                    inputUsername.replaceText(username)
-                    inputPassword.replaceText(password)
-                    loginButton.click()
-                }
+            step("Попытка входа с пустыми логином и паролем") {
+                scenario(
+                    LoginScenario("","")
+                )
             }
             step("Check current screen") {
                 device.activities.isCurrent(LoginActivity::class.java)
@@ -106,46 +51,10 @@ class LoginActivityTest : com.kaspersky.kaspresso.testcases.api.testcase.TestCas
     @Test
     fun loginUnsuccessfulIfPasswordIncorrect() {
         run {
-            val username = "123456"
-            val password = "12345"
-
-            step("Open login screen") {
-                MainScreen {
-                    loginActivityButton {
-                        isVisible()
-                        isClickable()
-                        click()
-                    }
-                }
-            }
-            step("Check elements visibility") {
-                LoginScreen {
-                    inputUsername {
-                        isVisible()
-                        hasHint(R.string.login_activity_hint_username)
-                    }
-                    inputPassword {
-                        isVisible()
-                        hasHint(R.string.login_activity_hint_password)
-                    }
-                    loginButton {
-                        isVisible()
-                        isClickable()
-                    }
-                }
-            }
-            step("Try to login") {
-                LoginScreen {
-                    inputUsername {
-                        replaceText(username)
-                    }
-                    inputPassword {
-                        replaceText(password)
-                    }
-                    loginButton {
-                        click()
-                    }
-                }
+            step("Попытка входа без пароля") {
+                scenario(
+                    LoginScenario("user1","")
+                )
             }
             step("Check current screen") {
                 device.activities.isCurrent(LoginActivity::class.java)
