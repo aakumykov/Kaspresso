@@ -2,7 +2,9 @@ package com.kaspersky.kaspresso.tutorial
 
 import android.content.Context
 import android.media.AudioManager
+import android.os.Build
 import androidx.test.ext.junit.rules.activityScenarioRule
+import androidx.test.filters.SdkSuppress
 import com.kaspersky.kaspresso.tutorial.scenario.CallNumberScenario
 import com.kaspersky.kaspresso.tutorial.screen.MainScreen
 import com.kaspersky.kaspresso.tutorial.screen.MakeCallActivityScreen
@@ -27,10 +29,12 @@ class MakeCallActivityDevicePermissionsTest : com.kaspersky.kaspresso.testcases.
             CallNumberScenario(testNumber)
         )
         step("Accept call permission") {
-            device.permissions.apply {
-                flakySafely {
-                    Assert.assertTrue(isDialogVisible())
-                    allowViaDialog()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                device.permissions.apply {
+                    flakySafely {
+                        Assert.assertTrue(isDialogVisible())
+                        allowViaDialog()
+                    }
                 }
             }
         }
@@ -43,6 +47,7 @@ class MakeCallActivityDevicePermissionsTest : com.kaspersky.kaspresso.testcases.
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.M)
     fun checkCallDenied() = before {
         adbServer.performShell("pm revoke com.kaspersky.kaspresso.tutorial android.permission.CALL_PHONE")
     }.after {
