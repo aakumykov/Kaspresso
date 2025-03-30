@@ -18,47 +18,83 @@ class WiFiActivityTest : TestCase() {
 
     @Test
     fun testWifiStatus() {
-        MainScreen {
-            wifiActivityButton {
-                isVisible()
-                isClickable()
-                click()
-            }
-        }
-
-        WifiScreen {
+        before {
             device.exploit.setOrientation(Exploit.DeviceOrientation.Portrait)
-
-            wifiStatus.hasEmptyText()
-            checkWifiButton.isVisible()
-
-            checkWifiButton {
-                device.network.toggleWiFi(false)
-                click()
-            }
-            wifiStatus {
-                isVisible()
-                hasText(R.string.disabled_status)
-            }
-            device.exploit.setOrientation(Exploit.DeviceOrientation.Landscape)
-            wifiStatus {
-                isVisible()
-                hasText(R.string.disabled_status)
-            }
-
-            checkWifiButton {
-                device.network.toggleWiFi(true)
-                click()
-            }
-            wifiStatus {
-                isVisible()
-                hasText(R.string.enabled_status)
-                TimeUnit.SECONDS.sleep(3)
-            }
+            device.network.toggleWiFi(true)
+        }.after {
             device.exploit.setOrientation(Exploit.DeviceOrientation.Portrait)
-            wifiStatus {
-                isVisible()
-                hasText(R.string.enabled_status)
+            device.network.toggleWiFi(true)
+        }.run {
+            step("Открытие экрана проверки WiFi") {
+                MainScreen {
+                    wifiActivityButton {
+                        isVisible()
+                        isClickable()
+                        click()
+                    }
+                }
+            }
+            step("Установка портретной ориентации") {
+                device.exploit.setOrientation(Exploit.DeviceOrientation.Portrait)
+            }
+            WifiScreen {
+                    step("Проверка начального состояния экрана") {
+                        wifiStatus.hasEmptyText()
+                        checkWifiButton.isVisible()
+                    }
+                    step("Отключение WiFi и нажатие кнопки проверки статуса") {
+                        checkWifiButton {
+                            device.network.toggleWiFi(false)
+                            click()
+                        }
+                    }
+                    step("Проверка, что статус WiFi 'отключен'") {
+                        wifiStatus {
+                            isVisible()
+                            hasText(R.string.disabled_status)
+                        }
+                    }
+            }
+            step("Установка альбомной ориентации") {
+                device.exploit.setOrientation(Exploit.DeviceOrientation.Landscape)
+            }
+            WifiScreen {
+                step("Проверка, что после поворота текст 'отключен' сохранился") {
+                    wifiStatus {
+                        isVisible()
+                        hasText(R.string.disabled_status)
+                    }
+                }
+                step("Включение WiFi и нажатие кнопки проверки статуса") {
+                    checkWifiButton {
+                        device.network.toggleWiFi(true)
+                        click()
+                    }
+                }
+                step("Проверка на строку 'вкллючено'") {
+                    wifiStatus {
+                        isVisible()
+                        hasText(R.string.enabled_status)
+                    }
+                }
+                step("") {
+
+                }
+                step("") {
+
+                }
+
+            }
+            step("Установка портретной ориентации") {
+                device.exploit.setOrientation(Exploit.DeviceOrientation.Portrait)
+            }
+            WifiScreen {
+                step("Проверка, что текст 'включено' сохранился") {
+                    wifiStatus {
+                        isVisible()
+                        hasText(R.string.enabled_status)
+                    }
+                }
             }
         }
     }
