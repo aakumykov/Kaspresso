@@ -14,20 +14,22 @@ import org.junit.Test
 class MakeCallActivityTest : TestCase() {
 
     @get:Rule
-    val activityScenarioRule = activityScenarioRule<MainActivity>()
-
-    @get:Rule
-    val grantPermissionRule = GrantPermissionRule.grant(
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         android.Manifest.permission.CALL_PHONE
     )
 
-    @Before
-    fun revokeCallPrivilege(){
-//        adbServer.performShell("pm revoke com.kaspersky.kaspresso.tutorial android.permission.CALL_PHONE")
-    }
+
+    @get:Rule
+    val activityScenarioRule = activityScenarioRule<MainActivity>()
+
 
     @Test
-    fun checkSuccessCall() = run {
+    fun checkSuccessCall() = before {
+//        adbServer.performShell("pm grant com.kaspersky.kaspresso.tutorial android.permission.CALL_PHONE")
+    }.after {
+        device.phone.cancelCall(TEST_NUMBER)
+        adbServer.performShell("pm revoke com.kaspersky.kaspresso.tutorial android.permission.CALL_PHONE")
+    }.run {
         step("Открытие экрана звонков") {
             MainScreen {
                 makeCallActivityButton {
@@ -53,13 +55,19 @@ class MakeCallActivityTest : TestCase() {
         }
         step("Звонок") {
             MakeCallActivityScreen {
-                inputNumber.replaceText("+71234567890")
+                inputNumber.replaceText(TEST_NUMBER)
                 makeCallButton.click()
             }
         }
         step("Проверка, что звонок осуществляется") {
-            val audioManager = device.context.getSystemService(AudioManager::class.java)
-            Assert.assertTrue(AudioManager.MODE_IN_CALL == audioManager.mode)
+            flakySafely {
+                val audioManager = device.context.getSystemService(AudioManager::class.java)
+                Assert.assertTrue(AudioManager.MODE_IN_CALL == audioManager.mode)
+            }
         }
+    }
+
+    companion object {
+        const val TEST_NUMBER = "+71234567890"
     }
 }
