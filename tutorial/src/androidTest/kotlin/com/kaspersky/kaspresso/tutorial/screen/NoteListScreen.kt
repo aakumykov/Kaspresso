@@ -1,6 +1,7 @@
 package com.kaspersky.kaspresso.tutorial.screen
 
 import android.view.View
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.kaspersky.kaspresso.screens.KScreen
 import com.kaspersky.kaspresso.tutorial.R
@@ -25,5 +26,8 @@ object NoteListScreen : KScreen<NoteListScreen>() {
         val noteContainer = KView(matcher) { withId(R.id.note_container) }
         val tvNoteId = KTextView(matcher) { withId(R.id.tv_note_id) }
         val tvNoteText = KTextView(matcher) { withId(R.id.tv_note_text) }
+        fun swipeLeft() {
+            view.perform(ViewActions.swipeLeft())
+        }
     }
 }

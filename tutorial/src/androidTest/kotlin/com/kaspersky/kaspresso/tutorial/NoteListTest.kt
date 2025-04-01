@@ -78,7 +78,7 @@ class NoteListTest : TestCase() {
             NoteListScreen {
                 rvNotes {
                     firstChild<NoteListScreen.NoteItemScreen> {
-                        view.perform(ViewActions.swipeLeft())
+                        swipeLeft()
                         device.uiDevice.waitForIdle()
                     }
                     Assert.assertEquals(2, this@rvNotes.getSize())
