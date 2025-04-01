@@ -1,5 +1,6 @@
 package com.kaspersky.kaspresso.tutorial
 
+import androidx.test.espresso.action.ViewActions
 import androidx.test.ext.junit.rules.activityScenarioRule
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.kaspersky.kaspresso.tutorial.screen.MainScreen
@@ -69,8 +70,40 @@ class NoteListTest : TestCase() {
                 }
             }
         }
-        step("") {
 
+        step("Замедление анимации") {
+            setAnimationSpeed(4f)
         }
+        step("Удаление первого элемента") {
+            NoteListScreen {
+                rvNotes {
+                    firstChild<NoteListScreen.NoteItemScreen> {
+                        view.perform(ViewActions.swipeLeft())
+                        device.uiDevice.waitForIdle()
+                    }
+                    Assert.assertEquals(2, this@rvNotes.getSize())
+
+                    childAt<NoteListScreen.NoteItemScreen>(0) {
+                        noteContainer.hasBackgroundColor(android.R.color.holo_orange_light)
+                        tvNoteId.hasText("1")
+                        tvNoteText.hasText("Note number 1")
+                    }
+                    lastChild<NoteListScreen.NoteItemScreen> {
+                        noteContainer.hasBackgroundColor(android.R.color.holo_red_light)
+                        tvNoteId.hasText("2")
+                        tvNoteText.hasText("Note number 2")
+                    }
+                }
+            }
+        }
+        step("Ускорение анимации") {
+            setAnimationSpeed(0.1f)
+        }
+    }
+
+    private fun setAnimationSpeed(durationMultiplier: Float) {
+        adbServer.performShell("settings put global window_animation_scale $durationMultiplier")
+        adbServer.performShell("settings put global transition_animation_scale $durationMultiplier")
+        adbServer.performShell("settings put global animator_duration_scale $durationMultiplier")
     }
 }
