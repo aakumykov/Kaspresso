@@ -19,7 +19,7 @@ class NoteListTest : TestCase() {
     fun delay() { TimeUnit.SECONDS.sleep(1) }
 
     @Test
-    fun testRV() = run {
+    fun testRecyclerView() = run {
         step("Открыть экран с RecyclerView") {
             MainScreen {
                 listViewButton {
@@ -47,6 +47,30 @@ class NoteListTest : TestCase() {
                     }
                 }
             }
+        }
+        step("Check elements content") {
+            NoteListScreen {
+                rvNotes {
+                    childAt<NoteListScreen.NoteItemScreen>(0) {
+                        noteContainer.hasBackgroundColor(android.R.color.holo_green_light)
+                        tvNoteId.hasText("0")
+                        tvNoteText.hasText("Note number 0")
+                    }
+                    childAt<NoteListScreen.NoteItemScreen>(1) {
+                        noteContainer.hasBackgroundColor(android.R.color.holo_orange_light)
+                        tvNoteId.hasText("1")
+                        tvNoteText.hasText("Note number 1")
+                    }
+                    childAt<NoteListScreen.NoteItemScreen>(2) {
+                        noteContainer.hasBackgroundColor(android.R.color.holo_red_light)
+                        tvNoteId.hasText("2")
+                        tvNoteText.hasText("Note number 2")
+                    }
+                }
+            }
+        }
+        step("") {
+
         }
     }
 }
